@@ -1,5 +1,11 @@
 # rn-phone-hint
 
+## 0.1.2
+
+### Patch Changes
+
+- 5c5fbf2: made android library
+
 ## 0.1.1
 
 ### Patch Changes
