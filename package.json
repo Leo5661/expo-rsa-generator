@@ -1,0 +1,39 @@
+{
+  "name": "rn-phone-hint",
+  "version": "0.0.1",
+  "description": "React Native module for Google Phone Hint API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "android",
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "changeset": "changeset"
+  },
+  "keywords": [
+    "phone hint api",
+    "react native",
+    "google-play-services",
+    "phone hint",
+    "phone hint react native",
+    "phone hint api react native"
+  ],
+  "author": {
+    "name": "Rahul Singh",
+    "url": "https://x.com/_leocoder_"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "react-native": "0.76.7"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.72.7",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.28.1"
+  }
+}
