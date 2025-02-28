@@ -10,7 +10,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "android",
-    "src"
+    "dist"
   ],
   "repository": {
     "type": "git",
