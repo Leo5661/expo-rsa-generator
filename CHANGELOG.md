@@ -1,5 +1,11 @@
 # rn-phone-hint
 
+## 0.1.1
+
+### Patch Changes
+
+- e599bf7: added types
+
 ## 0.1.0
 
 ### Minor Changes
