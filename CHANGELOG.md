@@ -1,5 +1,12 @@
 # rn-phone-hint
 
+## 0.1.3
+
+### Patch Changes
+
+- 5d753b7: Fix Native
+- 5d753b7: fix gradle error
+
 ## 0.1.2
 
 ### Patch Changes
