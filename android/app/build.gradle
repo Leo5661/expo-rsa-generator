@@ -5,7 +5,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 33 // or latest
     defaultConfig {
-        applicationId "com.rn-phone-hint"
+        applicationId "com.rnphonehint"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1

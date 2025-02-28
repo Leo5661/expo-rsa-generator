@@ -1,4 +1,4 @@
-package com.phonehint
+package com.rnphonehint
 
 import android.app.Activity
 import android.content.Intent
