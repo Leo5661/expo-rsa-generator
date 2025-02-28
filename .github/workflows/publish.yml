@@ -39,7 +39,7 @@ jobs:
               id: changesets
               uses: changesets/action@v1
               with: 
-                publish: pnpm run pub:cli
+                publish: pnpm pub
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
