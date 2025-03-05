@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
 
 group = 'expo.modules.rsagenerator'
 version = '0.1.0'
@@ -27,21 +26,6 @@ buildscript {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-            }
-        }
-        repositories {
-            maven {
-                url = mavenLocal().url
-            }
-        }
-    }
-}
-
 android {
     compileSdkVersion safeExtGet("compileSdkVersion", 34)
 
@@ -62,7 +46,7 @@ android {
         }
     }
 
-    namespace "expo.modules.rsagenerator" // Ensure this matches your Kotlin package name!
+    namespace "expo.modules.rsagenerator"
 
     defaultConfig {
         minSdkVersion safeExtGet("minSdkVersion", 21)
@@ -75,20 +59,20 @@ android {
         abortOnError false
     }
 
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            kotlin.srcDirs = ['src/main/kotlin']
         }
     }
 }
 
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
     implementation project(':expo-modules-core')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${getKotlinVersion()}"
-    // Add any other dependencies your module requires here.
-    
 }
