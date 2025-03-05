@@ -1,4 +1,4 @@
-name: Publish-RN-Phone-Hint
+name: Publish-Expo-RSA-Generator
 
 on:
     push:
@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
     release:
-        if: github.repository == 'Leo5661/rn-phone-hint'
+        if: github.repository == 'Leo5661/expo-rsa-generator'
         permissions: 
           contents: write
           pull-requests: write
@@ -26,10 +26,10 @@ jobs:
               with:
                   version: latest
 
-            - name: Setup Node.js v20.x
+            - name: Setup Node.js v18.x
               uses: actions/setup-node@v3
               with:
-                  node-version: 20.x
+                  node-version: 18.x
                   cache: 'pnpm'
 
             - name: Install dependencies

@@ -1,1 +1,2 @@
-export { default } from './PhoneHintModule';
+export { default } from './ExpoRsaGeneratorModule';
+// export * from  './ExpoRsaGenerator.types';

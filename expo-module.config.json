@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "ExpoRsaGeneratorModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.rsagenerator.ExpoRsaGeneratorModule"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-rsa-generator": ["../src/index"],
+      "expo-rsa-generator/*": ["../src/*"]
+    }
+  }
+}
