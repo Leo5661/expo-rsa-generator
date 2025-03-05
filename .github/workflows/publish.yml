@@ -29,11 +29,11 @@ jobs:
             - name: Setup Node.js v18.x
               uses: actions/setup-node@v3
               with:
-                  node-version: 18.x
-                  cache: 'pnpm'
+                  node-version: 18
+                  cache: 'npm'
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: npm ci
 
             - name: Create Release Pull Request and Publish to npm
               id: changesets
