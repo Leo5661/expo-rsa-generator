@@ -1,5 +1,11 @@
 # expo-rsa-generator
 
+## 1.0.1
+
+### Patch Changes
+
+- 5433cc6: Fixed Autolink in android and ios
+
 ## 1.0.0
 
 ### Major Changes
