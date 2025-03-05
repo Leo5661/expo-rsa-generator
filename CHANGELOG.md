@@ -1,5 +1,11 @@
 # expo-rsa-generator
 
+## 1.0.2
+
+### Patch Changes
+
+- 94294e3: fix gradle
+
 ## 1.0.1
 
 ### Patch Changes
