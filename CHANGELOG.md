@@ -1,5 +1,11 @@
 # expo-rsa-generator
 
+## 1.0.4
+
+### Patch Changes
+
+- 1cec9c7: updated package.json
+
 ## 1.0.3
 
 ### Patch Changes
