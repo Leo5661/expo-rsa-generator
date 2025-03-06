@@ -8,11 +8,6 @@
     "provenance": true,
     "access": "public"
   },
-  "files": [
-    "build",
-    "android",
-    "ios"
-  ],
   "scripts": {
     "start": "expo-module build",
     "clean": "expo-module clean",
