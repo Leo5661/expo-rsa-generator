@@ -1,5 +1,11 @@
 # expo-rsa-generator
 
+## 1.0.5
+
+### Patch Changes
+
+- fdb4c48: fix kotlin path for native module in android
+
 ## 1.0.4
 
 ### Patch Changes
