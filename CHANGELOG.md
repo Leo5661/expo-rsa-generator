@@ -1,5 +1,11 @@
 # expo-rsa-generator
 
+## 1.0.6
+
+### Patch Changes
+
+- 2202244: module autolink fix
+
 ## 1.0.5
 
 ### Patch Changes
