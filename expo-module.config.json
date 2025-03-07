@@ -5,12 +5,12 @@
   ],
   "apple": {
     "modules": [
-      "ExpoRsaGenerator"
+      "ExpoRsaGeneratorModule"
     ]
   },
   "android": {
     "modules": [
-      "expo.modules.rsagenerator.ExpoRsaGenerator"
+      "expo.modules.rsagenerator.ExpoRsaGeneratorModule"
     ]
   }
 }
