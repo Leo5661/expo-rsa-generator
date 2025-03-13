@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ScrollView, Alert } from 'react-native';
-import ExpoRsaGenerator from 'expo-rsa-generator';
+import {ExpoRsaGenerator } from 'expo-rsa-generator';
 
 export default function App() {
   const [keyAlias, setKeyAlias] = useState('MyCustomKeyAlias');
@@ -11,7 +11,7 @@ export default function App() {
 
   const generateKeyPair = async () => {
     try {
-      const publicKeyBase64 = await ExpoRsaGenerator.generateRSAKeyPair(keyAlias);
+      const publicKeyBase64 = await ExpoRsaGenerator.generateKeyPair(keyAlias);
       setPublicKey(publicKeyBase64);
       Alert.alert('Success', 'Key pair generated successfully.');
     } catch (error: any) {
@@ -22,7 +22,8 @@ export default function App() {
 
   const encryptData = async () => {
     try {
-      const encryptedBase64 = await ExpoRsaGenerator.encryptRSA(keyAlias, inputText);
+      const encryptedBase64 = await ExpoRsaGenerator.encrypt(keyAlias, inputText);
+      console.log('encryptedBase64', encryptedBase64);
       setEncryptedText(encryptedBase64);
       Alert.alert('Success', 'Encryption successful.');
     } catch (error: any) {
@@ -33,7 +34,8 @@ export default function App() {
 
   const decryptData = async () => {
     try {
-      const decryptedString = await ExpoRsaGenerator.decryptRSA(keyAlias, encryptedText);
+      console.log('encryptedText', encryptedText);
+      const decryptedString = await ExpoRsaGenerator.decrypt(keyAlias, encryptedText);
       setDecryptedText(decryptedString);
       Alert.alert('Success', 'Decryption successful.');
     } catch (error: any) {

@@ -1,2 +1,2 @@
-export { default } from './ExpoRsaGeneratorModule';
+export * from './ExpoRsaGeneratorModule';
 // export * from  './ExpoRsaGenerator.types';

@@ -7,20 +7,20 @@ public class ExpoRsaGeneratorModule: Module {
     public func definition() -> ModuleDefinition {
         Name("ExpoRsaGenerator") 
 
-        AsyncFunction("generateRSAKeyPair") { (keyAlias: String, promise: Promise) in
-            self.generateRSAKeyPair(keyAlias: keyAlias, promise: promise)
+        AsyncFunction("generateKeyPair") { (keyAlias: String, promise: Promise) in
+            self.generateKeyPair(keyAlias: keyAlias, promise: promise)
         }
 
-        AsyncFunction("encryptRSA") { (keyAlias: String, data: String, promise: Promise) in
-            self.encryptRSA(keyAlias: keyAlias, data: data, promise: promise)
+        AsyncFunction("encrypt") { (keyAlias: String, data: String, promise: Promise) in
+            self.encrypt(keyAlias: keyAlias, data: data, promise: promise)
         }
 
-        AsyncFunction("decryptRSA") { (keyAlias: String, encryptedBase64: String, promise: Promise) in
-            self.decryptRSA(keyAlias: keyAlias, encryptedBase64: encryptedBase64, promise: promise)
+        AsyncFunction("decrypt") { (keyAlias: String, encryptedBase64: String, promise: Promise) in
+            self.decrypt(keyAlias: keyAlias, encryptedBase64: encryptedBase64, promise: promise)
         }
     }
 
-    private func generateRSAKeyPair(keyAlias: String, promise: Promise) {
+    private func generateKeyPair(keyAlias: String, promise: Promise) {
         do {
             let attributes: [String: Any] = [
                 kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
@@ -53,7 +53,7 @@ public class ExpoRsaGeneratorModule: Module {
         }
     }
 
-    private func encryptRSA(keyAlias: String, data: String, promise: Promise) {
+    private func encrypt(keyAlias: String, data: String, promise: Promise) {
         do {
             let query: [String: Any] = [
                 kSecClass as String: kSecClassKey,
@@ -82,7 +82,7 @@ public class ExpoRsaGeneratorModule: Module {
         }
     }
 
-    private func decryptRSA(keyAlias: String, encryptedBase64: String, promise: Promise) {
+    private func decrypt(keyAlias: String, encryptedBase64: String, promise: Promise) {
         do {
             let query: [String: Any] = [
                 kSecClass as String: kSecClassKey,
