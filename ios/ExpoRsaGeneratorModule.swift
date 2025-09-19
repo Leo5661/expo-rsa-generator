@@ -3,24 +3,24 @@ import Security
 import ExpoModulesCore
 
 public class ExpoRsaGeneratorModule: Module {
-
     public func definition() -> ModuleDefinition {
-        Name("ExpoRsaGenerator") 
+        Name("ExpoRsaGenerator")
 
-        AsyncFunction("generateKeyPair") { (keyAlias: String, promise: Promise) in
-            self.generateKeyPair(keyAlias: keyAlias, promise: promise)
+        AsyncFunction("generateRSAKeyPair") { (keyAlias: String, promise: Promise) in
+            self.generateRSAKeyPair(keyAlias: keyAlias, promise: promise)
         }
 
-        AsyncFunction("encrypt") { (keyAlias: String, data: String, promise: Promise) in
-            self.encrypt(keyAlias: keyAlias, data: data, promise: promise)
+        AsyncFunction("encryptRSA") { (keyAlias: String, data: String, promise: Promise) in
+            self.encryptRSA(keyAlias: keyAlias, data: data, promise: promise)
         }
 
-        AsyncFunction("decrypt") { (keyAlias: String, encryptedBase64: String, promise: Promise) in
-            self.decrypt(keyAlias: keyAlias, encryptedBase64: encryptedBase64, promise: promise)
+        AsyncFunction("decryptRSA") { (keyAlias: String, encryptedBase64: String, promise: Promise) in
+            self.decryptRSA(keyAlias: keyAlias, encryptedBase64: encryptedBase64, promise: promise)
         }
     }
 
-    private func generateKeyPair(keyAlias: String, promise: Promise) {
+    // New, fixed implementation for generating keys
+    private func generateRSAKeyPair(keyAlias: String, promise: Promise) {
         do {
             let attributes: [String: Any] = [
                 kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
@@ -38,22 +38,30 @@ public class ExpoRsaGeneratorModule: Module {
             ]
 
             var error: Unmanaged<CFError>?
-            guard let keyPair = SecKeyGeneratePair(attributes as CFDictionary, &error) else {
+            // Using the modern SecKeyCreateRandomKey API
+            guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
                 throw error!.takeRetainedValue() as Error
             }
+            
+            // Getting the public key from the private key
+            guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+                throw NSError(domain: "ExpoRsaGeneratorModule", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to get public key from private key."])
+            }
 
-            let publicKeyData = SecKeyCopyExternalRepresentation(keyPair.publicKey, &error) as Data?
+            let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data?
             guard let publicKeyBase64 = publicKeyData?.base64EncodedString() else {
                 throw error!.takeRetainedValue() as Error
             }
 
             promise.resolve(publicKeyBase64)
         } catch {
-            promise.reject("KEY_GENERATION_ERROR", error)
+            // Fixing promise.reject to accept a String
+            promise.reject("KEY_GENERATION_ERROR", error.localizedDescription)
         }
     }
 
-    private func encrypt(keyAlias: String, data: String, promise: Promise) {
+    // Fixed implementation for encryption
+    private func encryptRSA(keyAlias: String, data: String, promise: Promise) {
         do {
             let query: [String: Any] = [
                 kSecClass as String: kSecClassKey,
@@ -65,24 +73,28 @@ public class ExpoRsaGeneratorModule: Module {
             var item: CFTypeRef?
             let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-            guard status == errSecSuccess, let publicKey = item as? SecKey else {
+            // Using force unwrap as downcast will always succeed with errSecSuccess
+            guard status == errSecSuccess, let publicKey = item as! SecKey? else {
                 throw NSError(domain: "ExpoRsaGeneratorModule", code: 0, userInfo: [NSLocalizedDescriptionKey: "Public key not found."])
             }
-
-            let padding: SecPadding = .PKCS1
-            guard let encryptedData = SecKeyCreateEncryptedData(publicKey, padding, data.data(using: .utf8)! as CFData, nil) as Data? else {
+            
+            // Using the correct SecKeyAlgorithm
+            let algorithm: SecKeyAlgorithm = .rsaEncryptionPKCS1
+            
+            guard let encryptedData = SecKeyCreateEncryptedData(publicKey, algorithm, data.data(using: .utf8)! as CFData, nil) as Data? else {
                 throw NSError(domain: "ExpoRsaGeneratorModule", code: 0, userInfo: [NSLocalizedDescriptionKey: "Encryption failed."])
             }
 
             let encryptedBase64 = encryptedData.base64EncodedString()
             promise.resolve(encryptedBase64)
-
         } catch {
-            promise.reject("ENCRYPTION_ERROR", error)
+            // Fixing promise.reject to accept a String
+            promise.reject("ENCRYPTION_ERROR", error.localizedDescription)
         }
     }
 
-    private func decrypt(keyAlias: String, encryptedBase64: String, promise: Promise) {
+    // Fixed implementation for decryption
+    private func decryptRSA(keyAlias: String, encryptedBase64: String, promise: Promise) {
         do {
             let query: [String: Any] = [
                 kSecClass as String: kSecClassKey,
@@ -94,16 +106,19 @@ public class ExpoRsaGeneratorModule: Module {
             var item: CFTypeRef?
             let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-            guard status == errSecSuccess, let privateKey = item as? SecKey else {
+            // Using force unwrap as downcast will always succeed with errSecSuccess
+            guard status == errSecSuccess, let privateKey = item as! SecKey? else {
                 throw NSError(domain: "ExpoRsaGeneratorModule", code: 0, userInfo: [NSLocalizedDescriptionKey: "Private key not found."])
             }
 
-            let padding: SecPadding = .PKCS1
+            // Using the correct SecKeyAlgorithm
+            let algorithm: SecKeyAlgorithm = .rsaEncryptionPKCS1
+            
             guard let encryptedData = Data(base64Encoded: encryptedBase64) else {
                 throw NSError(domain: "ExpoRsaGeneratorModule", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid base64 data."])
             }
 
-            guard let decryptedData = SecKeyCreateDecryptedData(privateKey, padding, encryptedData as CFData, nil) as Data? else {
+            guard let decryptedData = SecKeyCreateDecryptedData(privateKey, algorithm, encryptedData as CFData, nil) as Data? else {
                 throw NSError(domain: "ExpoRsaGeneratorModule", code: 0, userInfo: [NSLocalizedDescriptionKey: "Decryption failed."])
             }
 
@@ -113,7 +128,8 @@ public class ExpoRsaGeneratorModule: Module {
 
             promise.resolve(decryptedString)
         } catch {
-            promise.reject("DECRYPTION_ERROR", error)
+            // Fixing promise.reject to accept a String
+            promise.reject("DECRYPTION_ERROR", error.localizedDescription)
         }
     }
 }
