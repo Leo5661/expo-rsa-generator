@@ -1,5 +1,11 @@
 # expo-rsa-generator
 
+## 1.0.7
+
+### Patch Changes
+
+- d74e903: Upgrade to Swift v6.1
+
 ## 1.0.6
 
 ### Patch Changes
