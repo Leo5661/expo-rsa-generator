@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ScrollView, Alert } from 'react-native';
-import {ExpoRsaGenerator } from 'expo-rsa-generator';
+import { ExpoRsaGenerator, ExpoEccGenerator } from 'expo-rsa-generator';
 
 export default function App() {
   const [keyAlias, setKeyAlias] = useState('MyCustomKeyAlias');
@@ -8,21 +8,32 @@ export default function App() {
   const [encryptedText, setEncryptedText] = useState('');
   const [decryptedText, setDecryptedText] = useState('');
   const [publicKey, setPublicKey] = useState('');
+  const [mode, setMode] = useState<'RSA' | 'ECC'>('RSA');
 
   const generateKeyPair = async () => {
     try {
-      const publicKeyBase64 = await ExpoRsaGenerator.generateKeyPair(keyAlias);
+      let publicKeyBase64;
+      if (mode === 'RSA') {
+        publicKeyBase64 = await ExpoRsaGenerator.generateRSAKeyPair(keyAlias);
+      } else {
+        publicKeyBase64 = await ExpoEccGenerator.generateECCKeyPair(keyAlias);
+      }
       setPublicKey(publicKeyBase64);
-      Alert.alert('Success', 'Key pair generated successfully.');
+      Alert.alert('Success', `${mode} Key pair generated successfully.`);
     } catch (error: any) {
-      console.error('Error generating key pair:', error);
-      Alert.alert('Error', `Key pair generation failed: ${error.message}`);
+      console.error(`Error generating ${mode} key pair:`, error);
+      Alert.alert('Error', `${mode} Key pair generation failed: ${error.message}`);
     }
   };
 
   const encryptData = async () => {
     try {
-      const encryptedBase64 = await ExpoRsaGenerator.encrypt(keyAlias, inputText);
+      let encryptedBase64;
+      if (mode === 'RSA') {
+        encryptedBase64 = await ExpoRsaGenerator.encryptRSA(keyAlias, inputText);
+      } else {
+        encryptedBase64 = await ExpoEccGenerator.encryptECC(keyAlias, inputText);
+      }
       console.log('encryptedBase64', encryptedBase64);
       setEncryptedText(encryptedBase64);
       Alert.alert('Success', 'Encryption successful.');
@@ -35,7 +46,12 @@ export default function App() {
   const decryptData = async () => {
     try {
       console.log('encryptedText', encryptedText);
-      const decryptedString = await ExpoRsaGenerator.decrypt(keyAlias, encryptedText);
+      let decryptedString;
+      if (mode === 'RSA') {
+        decryptedString = await ExpoRsaGenerator.decryptRSA(keyAlias, encryptedText);
+      } else {
+        decryptedString = await ExpoEccGenerator.decryptECC(keyAlias, encryptedText);
+      }
       setDecryptedText(decryptedString);
       Alert.alert('Success', 'Decryption successful.');
     } catch (error: any) {
@@ -46,13 +62,19 @@ export default function App() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.header}>{mode} Mode</Text>
+      <View style={styles.buttonContainer}>
+        <Button title="Switch to RSA" onPress={() => setMode('RSA')} disabled={mode === 'RSA'} />
+        <Button title="Switch to ECC" onPress={() => setMode('ECC')} disabled={mode === 'ECC'} />
+      </View>
+
       <TextInput
         style={styles.input}
         placeholder="Key Alias"
         value={keyAlias}
         onChangeText={setKeyAlias}
       />
-      <Button title="Generate Key Pair" onPress={generateKeyPair} />
+      <Button title={`Generate ${mode} Key Pair`} onPress={generateKeyPair} />
       {publicKey ? <Text>Public Key: {publicKey.substring(0, 50)}... </Text> : null}
 
       <TextInput
@@ -91,5 +113,16 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 20,
   },
 });

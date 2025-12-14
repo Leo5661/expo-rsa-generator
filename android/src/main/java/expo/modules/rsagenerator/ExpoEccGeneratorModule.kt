@@ -25,7 +25,7 @@ class ExpoEccGeneratorModule : Module() {
     override fun definition() = ModuleDefinition {
         Name("ExpoEccGenerator")
 
-        AsyncFunction("generateKeyPair") { keyAlias: String, promise: Promise ->
+        AsyncFunction("generateECCKeyPair") { keyAlias: String, promise: Promise ->
            try {
         if (!keyStore.containsAlias(keyAlias)) {
             val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore")
@@ -58,7 +58,7 @@ class ExpoEccGeneratorModule : Module() {
     }
         }
 
-        AsyncFunction("encrypt") { keyAlias: String, data: String, promise: Promise ->
+        AsyncFunction("encryptECC") { keyAlias: String, data: String, promise: Promise ->
             try {
                 val publicKeyBytes = keyStore.getCertificate(keyAlias).publicKey.encoded
                 val publicKey = java.security.KeyFactory.getInstance(KeyProperties.KEY_ALGORITHM_EC).generatePublic(java.security.spec.X509EncodedKeySpec(publicKeyBytes))
@@ -76,7 +76,7 @@ class ExpoEccGeneratorModule : Module() {
             }
         }
 
-        AsyncFunction("decrypt") { keyAlias: String, encryptedBase64: String, promise: Promise ->
+        AsyncFunction("decryptECC") { keyAlias: String, encryptedBase64: String, promise: Promise ->
             try {
                 val encryptedBytes = Base64.decode(encryptedBase64, Base64.DEFAULT)
 

@@ -2,15 +2,15 @@ import { requireNativeModule } from 'expo';
 import { NativeModule } from 'react-native';
 
 interface ExpoRsaGeneratorModule extends NativeModule {
-  generateKeyPair(keyAlias: string): Promise<string>;
-  encrypt(keyAlias: string, data: string): Promise<string>;
-  decrypt(keyAlias: string, encryptedBase64: string): Promise<string>;
+  generateRSAKeyPair(keyAlias: string): Promise<string>;
+  encryptRSA(keyAlias: string, data: string): Promise<string>;
+  decryptRSA(keyAlias: string, encryptedBase64: string): Promise<string>;
 }
 
 interface ExpoEccGeneratorModule extends NativeModule {
-  generateKeyPair(keyAlias: string): Promise<string>;
-  encrypt(keyAlias: string, data: string): Promise<string>;
-  decrypt(keyAlias: string, encryptedBase64: string): Promise<string>;
+  generateECCKeyPair(keyAlias: string): Promise<string>;
+  encryptECC(keyAlias: string, data: string): Promise<string>;
+  decryptECC(keyAlias: string, encryptedBase64: string): Promise<string>;
 }
 
 export const ExpoRsaGenerator = requireNativeModule<ExpoRsaGeneratorModule>('ExpoRsaGenerator');
