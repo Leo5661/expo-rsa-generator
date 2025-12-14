@@ -1,50 +1,42 @@
 name: Publish-Expo-RSA-Generator
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 concurrency: ${{github.workflow}}-${{github.ref}}
 permissions: {}
 
 jobs:
-    release:
-        if: github.repository == 'Leo5661/expo-rsa-generator'
-        permissions: 
-          contents: write
-          pull-requests: write
-          id-token: write
-        name: Release
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+  release:
+    if: github.repository == 'Leo5661/expo-rsa-generator'
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            - name: Setup pnpm@latest
-              uses: pnpm/action-setup@v2
-              with:
-                  version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-            - name: Setup Node.js v18.x
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 18
-                  cache: 'npm'
+      - name: Install dependencies
+        run: bun install
 
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Create Release Pull Request and Publish to npm
-              id: changesets
-              uses: changesets/action@v1
-              with: 
-                publish: pnpm pub
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-
+      - name: Create Release Pull Request and Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: bun run pub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 # - name: Send a Slack notification if a publish happens
 # if: steps.changesets.outputs.published == 'true'
 # # You can do something when a publish happens.
