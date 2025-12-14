@@ -1,6 +1,6 @@
 {
   "name": "expo-rsa-generator",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "Secure RSA key management and cryptographic operations for Expo applications.",
   "main": "build/index.js",
   "types": "build/index.d.ts",

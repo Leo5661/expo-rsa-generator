@@ -1,5 +1,15 @@
 # expo-rsa-generator
 
+## 2.0.0
+
+### Major Changes
+
+- 8f64b78: Add ECC and RSA for both android and ios with latest expo and react-native
+
+### Minor Changes
+
+- be27b15: updated CI/CD
+
 ## 1.0.7
 
 ### Patch Changes
